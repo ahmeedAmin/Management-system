@@ -1,0 +1,22 @@
+﻿@model EmployeeViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create New Employee</h1>
+<br />
+<br />
+<form asp-action="Create" method="post" class="form-horizontal" enctype="multipart/form-data">
+    @await Html.PartialAsync("PartialViews/FormUpdateAndCreateForEmoloyeePartial")
+    <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-primary">Create</button> 
+        </div>
+    </div>
+
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
