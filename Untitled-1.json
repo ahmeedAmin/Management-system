@@ -3,7 +3,7 @@
   "info": {
     "title": "Banking API",
     "version": "2.0.0",
-    "description": "Swagger 2.0 spec for Nintex integration based on provided Controllers/Models/DTOs."
+    "description": "Swagger 2.0 spec for Nintex integration covering Controllers/Models/DTOs exactly. Note: path alias /api/Ecm/Folders/cif/{cif} is used to avoid equivalent path conflicts in Swagger v2."
   },
   "host": "el-barka.runasp.net",
   "basePath": "/",
@@ -18,10 +18,7 @@
         "responses": {
           "200": {
             "description": "List of AML screenings",
-            "schema": {
-              "type": "array",
-              "items": { "$ref": "#/definitions/AmlScreening" }
-            }
+            "schema": { "type": "array", "items": { "$ref": "#/definitions/AmlScreening" } }
           }
         }
       },
@@ -29,18 +26,10 @@
         "summary": "Create AML screening (screen customer)",
         "operationId": "Aml_ScreenCustomer",
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": { "$ref": "#/definitions/AmlScreening" }
-          }
+          { "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/AmlScreening" } }
         ],
         "responses": {
-          "201": {
-            "description": "Created",
-            "schema": { "$ref": "#/definitions/AmlScreening" }
-          },
+          "201": { "description": "Created", "schema": { "$ref": "#/definitions/AmlScreening" } },
           "400": { "description": "Bad Request" }
         }
       }
@@ -90,10 +79,7 @@
           { "name": "nationalId", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "List of screenings for National ID",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/AmlScreening" } }
-          },
+          "200": { "description": "List of screenings", "schema": { "type": "array", "items": { "$ref": "#/definitions/AmlScreening" } } },
           "404": { "description": "Not Found" }
         }
       }
@@ -104,10 +90,7 @@
         "summary": "Get all accounts (with optional embedded customer)",
         "operationId": "CoreAccount_GetAll",
         "responses": {
-          "200": {
-            "description": "List of accounts (DTO)",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreAccountDTO" } }
-          }
+          "200": { "description": "List of accounts (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreAccountDTO" } } }
         }
       },
       "post": {
@@ -117,10 +100,7 @@
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreAccount" } }
         ],
         "responses": {
-          "201": {
-            "description": "Created",
-            "schema": { "$ref": "#/definitions/CreateAccountResponse" }
-          },
+          "201": { "description": "Created", "schema": { "$ref": "#/definitions/CreateAccountResponse" } },
           "400": { "description": "Bad Request" }
         }
       }
@@ -181,10 +161,7 @@
         "summary": "Get all customers (with accounts)",
         "operationId": "CoreCustomer_GetAll",
         "responses": {
-          "200": {
-            "description": "List of customers (DTO)",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreCustomerDTO" } }
-          }
+          "200": { "description": "List of customers (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreCustomerDTO" } } }
         }
       },
       "post": {
@@ -194,10 +171,7 @@
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreCustomer" } }
         ],
         "responses": {
-          "201": {
-            "description": "Created",
-            "schema": { "$ref": "#/definitions/CreateCustomerResponse" }
-          },
+          "201": { "description": "Created", "schema": { "$ref": "#/definitions/CreateCustomerResponse" } },
           "400": { "description": "Bad Request" }
         }
       }
@@ -213,7 +187,9 @@
           "200": { "description": "Customer (DTO)", "schema": { "$ref": "#/definitions/CoreCustomerDTO" } },
           "404": { "description": "Not Found" }
         }
-      },
+      }
+    },
+    "/api/CoreCustomer/{cif}": {
       "put": {
         "summary": "Update customer",
         "operationId": "CoreCustomer_Update",
@@ -258,10 +234,7 @@
         "summary": "Get all ECM folders (with documents)",
         "operationId": "Ecm_GetAllFolders",
         "responses": {
-          "200": {
-            "description": "List of folders (DTO)",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } }
-          }
+          "200": { "description": "List of folders (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } } }
         }
       },
       "post": {
@@ -276,7 +249,7 @@
         }
       }
     },
-    "/api/Ecm/Folders/{cif}": {
+    "/api/Ecm/Folders/cif/{cif}": {
       "get": {
         "summary": "Get ECM folders by CIF",
         "operationId": "Ecm_GetFoldersByCif",
@@ -284,15 +257,12 @@
           { "name": "cif", "in": "path", "required": true, "type": "integer", "format": "int64" }
         ],
         "responses": {
-          "200": {
-            "description": "List of folders (DTO)",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } }
-          },
+          "200": { "description": "List of folders (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } } },
           "404": { "description": "Not Found" }
         }
       }
     },
-    "/api/Ecm/Folders/{id}/id": {
+    "/api/Ecm/Folders/{id}": {
       "put": {
         "summary": "Update ECM folder",
         "operationId": "Ecm_UpdateFolder",
@@ -300,7 +270,11 @@
           { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" },
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmFolder" } }
         ],
-        "responses": { "204": { "description": "No Content" }, "400": { "description": "Bad Request" } }
+        "responses": {
+          "204": { "description": "No Content" },
+          "400": { "description": "Bad Request" },
+          "404": { "description": "Not Found" }
+        }
       },
       "delete": {
         "summary": "Delete ECM folder",
@@ -308,7 +282,25 @@
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
         ],
-        "responses": { "204": { "description": "No Content" }, "404": { "description": "Not Found" } }
+        "responses": {
+          "204": { "description": "No Content" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+
+    "/api/Ecm/Folders/{folderId}/{requestId}/Documents": {
+      "get": {
+        "summary": "Get documents by FolderId and RequestId",
+        "operationId": "Ecm_GetDocumentsByFolderAndRequest",
+        "parameters": [
+          { "name": "folderId", "in": "path", "required": true, "type": "string", "format": "uuid" },
+          { "name": "requestId", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "List of documents", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocument" } } },
+          "404": { "description": "Not Found" }
+        }
       }
     },
 
@@ -317,10 +309,7 @@
         "summary": "Get all ECM documents (with optional folder)",
         "operationId": "Ecm_GetAllDocuments",
         "responses": {
-          "200": {
-            "description": "List of documents (DTO)",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocumentDTO" } }
-          }
+          "200": { "description": "List of documents (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocumentDTO" } } }
         }
       },
       "post": {
@@ -354,7 +343,11 @@
           { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" },
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmDocument" } }
         ],
-        "responses": { "204": { "description": "No Content" }, "400": { "description": "Bad Request" } }
+        "responses": {
+          "204": { "description": "No Content" },
+          "400": { "description": "Bad Request" },
+          "404": { "description": "Not Found" }
+        }
       },
       "delete": {
         "summary": "Delete ECM document",
@@ -362,7 +355,10 @@
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
         ],
-        "responses": { "204": { "description": "No Content" }, "404": { "description": "Not Found" } }
+        "responses": {
+          "204": { "description": "No Content" },
+          "404": { "description": "Not Found" }
+        }
       }
     },
     "/api/Ecm/Documents/{id}/Status": {
@@ -374,23 +370,6 @@
         ],
         "responses": {
           "200": { "description": "Status string", "schema": { "type": "string" } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/Ecm/Folders/{folderId}/{requestId}/Documents": {
-      "get": {
-        "summary": "Get documents by FolderId and RequestId",
-        "operationId": "Ecm_GetDocumentsByFolderAndRequest",
-        "parameters": [
-          { "name": "folderId", "in": "path", "required": true, "type": "string", "format": "uuid" },
-          { "name": "requestId", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of documents",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocument" } }
-          },
           "404": { "description": "Not Found" }
         }
       }
@@ -442,10 +421,7 @@
         "Email": { "type": "string" },
         "BranchCode": { "type": "string", "maxLength": 10 },
         "CreatedAt": { "type": "string", "format": "date-time" },
-        "Accounts": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/CoreAccount" }
-        }
+        "Accounts": { "type": "array", "items": { "$ref": "#/definitions/CoreAccount" } }
       }
     },
     "EcmFolder": {
@@ -457,10 +433,7 @@
         "RequestId": { "type": "string", "maxLength": 50 },
         "PathHint": { "type": "string", "maxLength": 500 },
         "CreatedAt": { "type": "string", "format": "date-time" },
-        "Documents": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/EcmDocument" }
-        }
+        "Documents": { "type": "array", "items": { "$ref": "#/definitions/EcmDocument" } }
       }
     },
     "EcmDocument": {
@@ -505,10 +478,7 @@
         "Email": { "type": "string" },
         "BranchCode": { "type": "string" },
         "CreatedAt": { "type": "string", "format": "date-time" },
-        "Accounts": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/CoreAccountDTO" }
-        }
+        "Accounts": { "type": "array", "items": { "$ref": "#/definitions/CoreAccountDTO" } }
       }
     },
     "EcmFolderDTO": {
