@@ -1,0 +1,105 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "BankingAPI - DELETE Endpoints",
+    "version": "1.0"
+  },
+  "host": "el-barka.runasp.net",
+  "schemes": ["http"],
+  "paths": {
+    "/api/Aml/{id}": {
+      "delete": {
+        "tags": ["Aml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CoreAccount/{accountNumber}": {
+      "delete": {
+        "tags": ["CoreAccount"],
+        "parameters": [
+          {
+            "name": "accountNumber",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CoreCustomer/{cif}": {
+      "delete": {
+        "tags": ["CoreCustomer"],
+        "parameters": [
+          {
+            "name": "cif",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Ecm/Folders/{id}": {
+      "delete": {
+        "tags": ["Ecm"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Ecm/Documents/{id}": {
+      "delete": {
+        "tags": ["Ecm"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
