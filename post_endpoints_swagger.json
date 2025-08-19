@@ -1,317 +1,355 @@
-{
-  "swagger": "2.0",
-  "info": {
-    "title": "BankingAPI - POST Endpoints",
-    "version": "1.0"
-  },
-  "host": "el-barka.runasp.net",
-  "schemes": ["http"],
-  "paths": {
-    "/api/Aml": {
-      "post": {
-        "tags": ["Aml"],
-        "parameters": [],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AmlScreening"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/CoreAccount": {
-      "post": {
-        "tags": ["CoreAccount"],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CoreAccount"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/CoreCustomer": {
-      "post": {
-        "tags": ["CoreCustomer"],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CoreCustomer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Ecm/Folders": {
-      "post": {
-        "tags": ["Ecm"],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EcmFolder"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Ecm/Documents": {
-      "post": {
-        "tags": ["Ecm"],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EcmDocument"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "AmlScreening": {
-      "required": ["riskLevel", "riskScore"],
-      "type": "object",
-      "properties": {
-        "screeningId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "nationalID": {
-          "type": "string",
-          "maxLength": 14
-        },
-        "passportNo": {
-          "type": "string",
-          "maxLength": 30
-        },
-        "nameAr": {
-          "type": "string",
-          "maxLength": 200
-        },
-        "nameEn": {
-          "type": "string",
-          "maxLength": 200
-        },
-        "riskScore": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "riskLevel": {
-          "type": "string",
-          "maxLength": 10
-        },
-        "hitsCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "performedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "CoreAccount": {
-      "required": ["accountType", "cif", "currency"],
-      "type": "object",
-      "properties": {
-        "accountNumber": {
-          "type": "string",
-          "maxLength": 20
-        },
-        "cif": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "customer": {
-          "$ref": "#/definitions/CoreCustomer"
-        },
-        "accountType": {
-          "type": "string",
-          "maxLength": 30
-        },
-        "currency": {
-          "type": "string",
-          "maxLength": 3
-        },
-        "debitBlocked": {
-          "type": "boolean"
-        },
-        "productCode": {
-          "type": "string",
-          "maxLength": 30
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "CoreCustomer": {
-      "required": ["branchCode", "dob", "gender", "mobile", "nameAr"],
-      "type": "object",
-      "properties": {
-        "cif": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "nationalID": {
-          "type": "string",
-          "maxLength": 14
-        },
-        "passportNo": {
-          "type": "string",
-          "maxLength": 30
-        },
-        "nameAr": {
-          "type": "string",
-          "maxLength": 200
-        },
-        "nameEn": {
-          "type": "string",
-          "maxLength": 200
-        },
-        "dob": {
-          "type": "string",
-          "format": "date"
-        },
-        "gender": {
-          "type": "string"
-        },
-        "address": {
-          "type": "string",
-          "maxLength": 400
-        },
-        "mobile": {
-          "type": "string",
-          "maxLength": 20
-        },
-        "email": {
-          "type": "string",
-          "maxLength": 200,
-          "format": "email"
-        },
-        "branchCode": {
-          "type": "string",
-          "maxLength": 10
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "accounts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CoreAccount"
-          }
-        }
-      }
-    },
-    "EcmDocument": {
-      "required": ["docType", "fileName", "folderId", "requestId"],
-      "type": "object",
-      "properties": {
-        "documentId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "folderId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "folder": {
-          "$ref": "#/definitions/EcmFolder"
-        },
-        "requestId": {
-          "type": "string",
-          "maxLength": 50
-        },
-        "docType": {
-          "type": "string",
-          "maxLength": 50
-        },
-        "fileName": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "uploadedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "EcmFolder": {
-      "required": ["cif", "requestId"],
-      "type": "object",
-      "properties": {
-        "folderId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "cif": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "requestId": {
-          "type": "string",
-          "maxLength": 50
-        },
-        "pathHint": {
-          "type": "string",
-          "maxLength": 500
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "documents": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EcmDocument"
-          }
-        }
-      }
-    }
-  }
-}
+swagger: "2.0"
+info:
+  title: BankingAPI
+  version: "1.0"
+host: el-barka.runasp.net
+basePath: /
+schemes:
+  - http
+paths:
+  /api/Aml:
+    post:
+      tags:
+        - Aml
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/AmlScreening"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/AmlScreening"
+  /api/CoreAccount:
+    post:
+      tags:
+        - CoreAccount
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/CoreAccount"
+      responses:
+        200:
+          description: OK
+  /api/CoreCustomer:
+    post:
+      tags:
+        - CoreCustomer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/CoreCustomer"
+      responses:
+        200:
+          description: OK
+  /api/Ecm/Folders:
+    post:
+      tags:
+        - Ecm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/EcmFolder"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/EcmFolder"
+  /api/Ecm/Documents:
+    post:
+      tags:
+        - Ecm
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/EcmDocument"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/EcmDocument"
+definitions:
+  AmlScreening:
+    type: object
+    required:
+      - riskLevel
+      - riskScore
+    properties:
+      screeningId:
+        type: string
+        format: uuid
+      nationalID:
+        type: string
+        maxLength: 14
+      passportNo:
+        type: string
+        maxLength: 30
+      nameAr:
+        type: string
+        maxLength: 200
+      nameEn:
+        type: string
+        maxLength: 200
+      riskScore:
+        type: integer
+        format: int32
+      riskLevel:
+        type: string
+        maxLength: 10
+      hitsCount:
+        type: integer
+        format: int32
+      performedAt:
+        type: string
+        format: date-time
+  CoreAccount:
+    type: object
+    required:
+      - accountType
+      - cif
+      - currency
+    properties:
+      accountNumber:
+        type: string
+        maxLength: 20
+      cif:
+        type: integer
+        format: int64
+      customer:
+        $ref: "#/definitions/CoreCustomer"
+      accountType:
+        type: string
+        maxLength: 30
+      currency:
+        type: string
+        maxLength: 3
+      debitBlocked:
+        type: boolean
+      productCode:
+        type: string
+        maxLength: 30
+      createdAt:
+        type: string
+        format: date-time
+  CoreAccountDTO:
+    type: object
+    properties:
+      accountNumber:
+        type: string
+      cif:
+        type: integer
+        format: int64
+      accountType:
+        type: string
+      currency:
+        type: string
+      debitBlocked:
+        type: boolean
+      productCode:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      customer:
+        $ref: "#/definitions/CoreCustomerDTO"
+  CoreCustomer:
+    type: object
+    required:
+      - branchCode
+      - dob
+      - gender
+      - mobile
+      - nameAr
+    properties:
+      cif:
+        type: integer
+        format: int64
+      nationalID:
+        type: string
+        maxLength: 14
+      passportNo:
+        type: string
+        maxLength: 30
+      nameAr:
+        type: string
+        maxLength: 200
+      nameEn:
+        type: string
+        maxLength: 200
+      dob:
+        type: string
+        format: date
+      gender:
+        type: string
+      address:
+        type: string
+        maxLength: 400
+      mobile:
+        type: string
+        maxLength: 20
+      email:
+        type: string
+        maxLength: 200
+        format: email
+      branchCode:
+        type: string
+        maxLength: 10
+      createdAt:
+        type: string
+        format: date-time
+      accounts:
+        type: array
+        items:
+          $ref: "#/definitions/CoreAccount"
+  CoreCustomerDTO:
+    type: object
+    properties:
+      cif:
+        type: integer
+        format: int64
+      nationalID:
+        type: string
+      passportNo:
+        type: string
+      nameAr:
+        type: string
+      nameEn:
+        type: string
+      dob:
+        type: string
+        format: date
+      gender:
+        type: string
+      address:
+        type: string
+      mobile:
+        type: string
+      email:
+        type: string
+      branchCode:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      accounts:
+        type: array
+        items:
+          $ref: "#/definitions/CoreAccountDTO"
+  EcmDocument:
+    type: object
+    required:
+      - docType
+      - fileName
+      - folderId
+      - requestId
+    properties:
+      documentId:
+        type: string
+        format: uuid
+      folderId:
+        type: string
+        format: uuid
+      folder:
+        $ref: "#/definitions/EcmFolder"
+      requestId:
+        type: string
+        maxLength: 50
+      docType:
+        type: string
+        maxLength: 50
+      fileName:
+        type: string
+        maxLength: 255
+      uploadedAt:
+        type: string
+        format: date-time
+  EcmDocumentDTO:
+    type: object
+    properties:
+      documentId:
+        type: string
+        format: uuid
+      folderId:
+        type: string
+        format: uuid
+      requestId:
+        type: string
+      docType:
+        type: string
+      fileName:
+        type: string
+      uploadedAt:
+        type: string
+        format: date-time
+      folder:
+        $ref: "#/definitions/EcmFolderDTO"
+  EcmFolder:
+    type: object
+    required:
+      - cif
+      - requestId
+    properties:
+      folderId:
+        type: string
+        format: uuid
+      cif:
+        type: integer
+        format: int64
+      requestId:
+        type: string
+        maxLength: 50
+      pathHint:
+        type: string
+        maxLength: 500
+      createdAt:
+        type: string
+        format: date-time
+      documents:
+        type: array
+        items:
+          $ref: "#/definitions/EcmDocument"
+  EcmFolderDTO:
+    type: object
+    properties:
+      folderId:
+        type: string
+        format: uuid
+      cif:
+        type: integer
+        format: int64
+      requestId:
+        type: string
+      pathHint:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      documents:
+        type: array
+        items:
+          $ref: "#/definitions/EcmDocumentDTO"
