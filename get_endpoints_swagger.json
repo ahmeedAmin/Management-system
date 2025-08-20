@@ -1,490 +1,634 @@
-swagger: "2.0"
-info:
-  title: BankingAPI
-  version: "1.0"
-host: el-barka.runasp.net
-basePath: /
-schemes:
-  - http
-paths:
-  /api/Aml:
-    get:
-      tags:
-        - Aml
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/AmlScreening"
-  /api/Aml/{id}:
-    get:
-      tags:
-        - Aml
-      parameters:
-        - name: id
-          in: path
-          required: true
-          type: string
-          format: uuid
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/AmlScreening"
-  /api/Aml/NationalId/{nationalId}:
-    get:
-      tags:
-        - Aml
-      parameters:
-        - name: nationalId
-          in: path
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/AmlScreening"
-  /api/CoreAccount:
-    get:
-      tags:
-        - CoreAccount
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CoreAccountDTO"
-  /api/CoreAccount/{accountNumber}:
-    get:
-      tags:
-        - CoreAccount
-      parameters:
-        - name: accountNumber
-          in: path
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CoreAccountDTO"
-  /api/CoreCustomer:
-    get:
-      tags:
-        - CoreCustomer
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CoreCustomerDTO"
-  /api/CoreCustomer/CIF/{cif}:
-    get:
-      tags:
-        - CoreCustomer
-      parameters:
-        - name: cif
-          in: path
-          required: true
-          type: integer
-          format: int64
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CoreCustomerDTO"
-  /api/CoreCustomer/NationalId/{nationalId}:
-    get:
-      tags:
-        - CoreCustomer
-      parameters:
-        - name: nationalId
-          in: path
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CoreCustomerDTO"
-  /api/Ecm/Folders:
-    get:
-      tags:
-        - Ecm
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/EcmFolderDTO"
-  /api/Ecm/Folders/{cif}:
-    get:
-      tags:
-        - Ecm
-      parameters:
-        - name: cif
-          in: path
-          required: true
-          type: integer
-          format: int64
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/EcmFolderDTO"
-  /api/Ecm/Folders/{folderId}/{requestId}/Documents:
-    get:
-      tags:
-        - Ecm
-      parameters:
-        - name: folderId
-          in: path
-          required: true
-          type: string
-          format: uuid
-        - name: requestId
-          in: path
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-  /api/Ecm/Documents:
-    get:
-      tags:
-        - Ecm
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/EcmDocumentDTO"
-  /api/Ecm/Documents/{id}:
-    get:
-      tags:
-        - Ecm
-      parameters:
-        - name: id
-          in: path
-          required: true
-          type: string
-          format: uuid
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/EcmDocumentDTO"
-  /api/Ecm/Documents/{id}/Status:
-    get:
-      tags:
-        - Ecm
-      parameters:
-        - name: id
-          in: path
-          required: true
-          type: string
-          format: uuid
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: string
-definitions:
-  AmlScreening:
-    type: object
-    required:
-      - riskLevel
-      - riskScore
-    properties:
-      screeningId:
-        type: string
-        format: uuid
-      nationalID:
-        type: string
-        maxLength: 14
-      passportNo:
-        type: string
-        maxLength: 30
-      nameAr:
-        type: string
-        maxLength: 200
-      nameEn:
-        type: string
-        maxLength: 200
-      riskScore:
-        type: integer
-        format: int32
-      riskLevel:
-        type: string
-        maxLength: 10
-      hitsCount:
-        type: integer
-        format: int32
-      performedAt:
-        type: string
-        format: date-time
-  CoreAccount:
-    type: object
-    required:
-      - accountType
-      - cif
-      - currency
-    properties:
-      accountNumber:
-        type: string
-        maxLength: 20
-      cif:
-        type: integer
-        format: int64
-      customer:
-        $ref: "#/definitions/CoreCustomer"
-      accountType:
-        type: string
-        maxLength: 30
-      currency:
-        type: string
-        maxLength: 3
-      debitBlocked:
-        type: boolean
-      productCode:
-        type: string
-        maxLength: 30
-      createdAt:
-        type: string
-        format: date-time
-  CoreAccountDTO:
-    type: object
-    properties:
-      accountNumber:
-        type: string
-      cif:
-        type: integer
-        format: int64
-      accountType:
-        type: string
-      currency:
-        type: string
-      debitBlocked:
-        type: boolean
-      productCode:
-        type: string
-      createdAt:
-        type: string
-        format: date-time
-      customer:
-        $ref: "#/definitions/CoreCustomerDTO"
-  CoreCustomer:
-    type: object
-    required:
-      - branchCode
-      - dob
-      - gender
-      - mobile
-      - nameAr
-    properties:
-      cif:
-        type: integer
-        format: int64
-      nationalID:
-        type: string
-        maxLength: 14
-      passportNo:
-        type: string
-        maxLength: 30
-      nameAr:
-        type: string
-        maxLength: 200
-      nameEn:
-        type: string
-        maxLength: 200
-      dob:
-        type: string
-        format: date
-      gender:
-        type: string
-      address:
-        type: string
-        maxLength: 400
-      mobile:
-        type: string
-        maxLength: 20
-      email:
-        type: string
-        maxLength: 200
-        format: email
-      branchCode:
-        type: string
-        maxLength: 10
-      createdAt:
-        type: string
-        format: date-time
-      accounts:
-        type: array
-        items:
-          $ref: "#/definitions/CoreAccount"
-  CoreCustomerDTO:
-    type: object
-    properties:
-      cif:
-        type: integer
-        format: int64
-      nationalID:
-        type: string
-      passportNo:
-        type: string
-      nameAr:
-        type: string
-      nameEn:
-        type: string
-      dob:
-        type: string
-        format: date
-      gender:
-        type: string
-      address:
-        type: string
-      mobile:
-        type: string
-      email:
-        type: string
-      branchCode:
-        type: string
-      createdAt:
-        type: string
-        format: date-time
-      accounts:
-        type: array
-        items:
-          $ref: "#/definitions/CoreAccountDTO"
-  EcmDocument:
-    type: object
-    required:
-      - docType
-      - fileName
-      - folderId
-      - requestId
-    properties:
-      documentId:
-        type: string
-        format: uuid
-      folderId:
-        type: string
-        format: uuid
-      folder:
-        $ref: "#/definitions/EcmFolder"
-      requestId:
-        type: string
-        maxLength: 50
-      docType:
-        type: string
-        maxLength: 50
-      fileName:
-        type: string
-        maxLength: 255
-      uploadedAt:
-        type: string
-        format: date-time
-  EcmDocumentDTO:
-    type: object
-    properties:
-      documentId:
-        type: string
-        format: uuid
-      folderId:
-        type: string
-        format: uuid
-      requestId:
-        type: string
-      docType:
-        type: string
-      fileName:
-        type: string
-      uploadedAt:
-        type: string
-        format: date-time
-      folder:
-        $ref: "#/definitions/EcmFolderDTO"
-  EcmFolder:
-    type: object
-    required:
-      - cif
-      - requestId
-    properties:
-      folderId:
-        type: string
-        format: uuid
-      cif:
-        type: integer
-        format: int64
-      requestId:
-        type: string
-        maxLength: 50
-      pathHint:
-        type: string
-        maxLength: 500
-      createdAt:
-        type: string
-        format: date-time
-      documents:
-        type: array
-        items:
-          $ref: "#/definitions/EcmDocument"
-  EcmFolderDTO:
-    type: object
-    properties:
-      folderId:
-        type: string
-        format: uuid
-      cif:
-        type: integer
-        format: int64
-      requestId:
-        type: string
-      pathHint:
-        type: string
-      createdAt:
-        type: string
-        format: date-time
-      documents:
-        type: array
-        items:
-          $ref: "#/definitions/EcmDocumentDTO"
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "BankingAPI - GET Methods",
+    "version": "1.0",
+    "description": "API for retrieving banking data including AML screening, accounts, customers, and ECM folders/documents."
+  },
+  "host": "http://el-barka.runasp.net",
+  "basePath": "/v1",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "Aml",
+      "description": "Anti-Money Laundering (AML) screening operations"
+    },
+    {
+      "name": "CoreAccount",
+      "description": "Bank account management operations"
+    },
+    {
+      "name": "CoreCustomer",
+      "description": "Customer management operations"
+    },
+    {
+      "name": "Ecm",
+      "description": "Electronic Content Management (ECM) folder and document operations"
+    }
+  ],
+  "paths": {
+    "/api/Aml": {
+      "get": {
+        "tags": [
+          "Aml"
+        ],
+        "summary": "Retrieve AML screening records",
+        "operationId": "getAmlScreenings",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AmlScreening"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Aml/{id}": {
+      "get": {
+        "tags": [
+          "Aml"
+        ],
+        "summary": "Retrieve AML screening by ID",
+        "operationId": "getAmlScreeningById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "UUID of the AML screening record",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AmlScreening"
+            }
+          }
+        }
+      }
+    },
+    "/api/Aml/NationalId/{nationalId}": {
+      "get": {
+        "tags": [
+          "Aml"
+        ],
+        "summary": "Retrieve AML screenings by national ID",
+        "operationId": "getAmlScreeningsByNationalId",
+        "parameters": [
+          {
+            "name": "nationalId",
+            "in": "path",
+            "description": "National ID to filter AML screenings",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AmlScreening"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CoreAccount": {
+      "get": {
+        "tags": [
+          "CoreAccount"
+        ],
+        "summary": "Retrieve all accounts",
+        "operationId": "getCoreAccounts",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CoreAccountDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CoreAccount/{accountNumber}": {
+      "get": {
+        "tags": [
+          "CoreAccount"
+        ],
+        "summary": "Retrieve account by account number",
+        "operationId": "getCoreAccountByNumber",
+        "parameters": [
+          {
+            "name": "accountNumber",
+            "in": "path",
+            "description": "Account number to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CoreAccountDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/CoreCustomer": {
+      "get": {
+        "tags": [
+          "CoreCustomer"
+        ],
+        "summary": "Retrieve all customers",
+        "operationId": "getCoreCustomers",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CoreCustomerDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CoreCustomer/CIF/{cif}": {
+      "get": {
+        "tags": [
+          "CoreCustomer"
+        ],
+        "summary": "Retrieve customer by CIF",
+        "operationId": "getCoreCustomerByCif",
+        "parameters": [
+          {
+            "name": "cif",
+            "in": "path",
+            "description": "CIF of the customer to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CoreCustomerDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/CoreCustomer/NationalId/{nationalId}": {
+      "get": {
+        "tags": [
+          "CoreCustomer"
+        ],
+        "summary": "Retrieve customer by national ID",
+        "operationId": "getCoreCustomerByNationalId",
+        "parameters": [
+          {
+            "name": "nationalId",
+            "in": "path",
+            "description": "National ID of the customer to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CoreCustomerDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/Ecm/Folders": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve all ECM folders",
+        "operationId": "getEcmFolders",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EcmFolderDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Ecm/Folders/{cif}": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve ECM folders by CIF",
+        "operationId": "getEcmFoldersByCif",
+        "parameters": [
+          {
+            "name": "cif",
+            "in": "path",
+            "description": "CIF to filter ECM folders",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EcmFolderDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Ecm/Folders/{folderId}/{requestId}/Documents": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve documents in an ECM folder",
+        "operationId": "getEcmFolderDocuments",
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "description": "UUID of the ECM folder",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Request ID to filter documents",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/api/Ecm/Documents": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve all ECM documents",
+        "operationId": "getEcmDocuments",
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EcmDocumentDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Ecm/Documents/{id}": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve ECM document by ID",
+        "operationId": "getEcmDocumentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "UUID of the ECM document",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/EcmDocumentDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/Ecm/Documents/{id}/Status": {
+      "get": {
+        "tags": [
+          "Ecm"
+        ],
+        "summary": "Retrieve status of an ECM document",
+        "operationId": "getEcmDocumentStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "UUID of the ECM document",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AmlScreening": {
+      "type": "object",
+      "required": [
+        "riskLevel",
+        "riskScore"
+      ],
+      "properties": {
+        "screeningId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "nationalID": {
+          "type": "string",
+          "maxLength": 14
+        },
+        "passportNo": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "nameAr": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "nameEn": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "riskScore": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "riskLevel": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "hitsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "performedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CoreAccountDTO": {
+      "type": "object",
+      "properties": {
+        "accountNumber": {
+          "type": "string"
+        },
+        "cif": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accountType": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "debitBlocked": {
+          "type": "boolean"
+        },
+        "productCode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "customer": {
+          "$ref": "#/definitions/CoreCustomerDTO"
+        }
+      }
+    },
+    "CoreCustomerDTO": {
+      "type": "object",
+      "properties": {
+        "cif": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nationalID": {
+          "type": "string"
+        },
+        "passportNo": {
+          "type": "string"
+        },
+        "nameAr": {
+          "type": "string"
+        },
+        "nameEn": {
+          "type": "string"
+        },
+        "dob": {
+          "type": "string",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "branchCode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoreAccountDTO"
+          }
+        }
+      }
+    },
+    "EcmDocumentDTO": {
+      "type": "object",
+      "properties": {
+        "documentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "folderId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "docType": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "uploadedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "folder": {
+          "$ref": "#/definitions/EcmFolderDTO"
+        }
+      }
+    },
+    "EcmFolderDTO": {
+      "type": "object",
+      "properties": {
+        "folderId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "cif": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "pathHint": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EcmDocumentDTO"
+          }
+        }
+      }
+    }
+  }
+}
