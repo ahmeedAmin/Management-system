@@ -1,523 +1,1572 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "Banking API",
-    "version": "2.0.0",
-    "description": "Swagger 2.0 spec for Nintex integration covering Controllers/Models/DTOs exactly. Note: path alias /api/Ecm/Folders/cif/{cif} is used to avoid equivalent path conflicts in Swagger v2."
-  },
-  "host": "el-barka.runasp.net",
-  "basePath": "/",
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
-  "paths": {
-    "/api/Aml": {
-      "get": {
-        "summary": "Get all AML screenings",
-        "operationId": "Aml_GetAllScreenings",
-        "responses": {
-          "200": {
-            "description": "List of AML screenings",
-            "schema": { "type": "array", "items": { "$ref": "#/definitions/AmlScreening" } }
+	"swagger": "2.0",
+	"info": {
+		"description": "This is a comprehensive Banking API server that provides core banking functionalities including customer management, account operations, AML screening, and document management. You can find out more about this API at [http://el-barka.runasp.net](http://el-barka.runasp.net).",
+		"version": "1.0",
+		"title": "BankingAPI",
+		"termsOfService": "http://el-barka.runasp.net/terms/",
+		"contact": {
+			"email": "api@el-barka.runasp.net"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"host": "el-barka.runasp.net",
+	"basePath": "/api",
+	"tags": [
+		{
+			"name": "aml",
+			"description": "Anti-Money Laundering operations",
+			"externalDocs": {
+				"description": "Find out more about AML",
+				"url": "http://el-barka.runasp.net/aml"
+			}
+		},
+		{
+			"name": "account",
+			"description": "Core banking account operations"
+		},
+		{
+			"name": "customer",
+			"description": "Customer management operations",
+			"externalDocs": {
+				"description": "Find out more about customer management",
+				"url": "http://el-barka.runasp.net/customers"
+			}
+		},
+		{
+			"name": "document",
+			"description": "Document and folder management operations"
+		}
+	],
+	"schemes": ["http"],
+	"paths": {
+		"/Aml": {
+			"get": {
+				"tags": ["aml"],
+				"summary": "Get all AML screenings",
+				"description": "Retrieve a list of all AML screening records",
+				"operationId": "getAmlScreenings",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AmlScreening"
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request"
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			},
+			"post": {
+				"tags": ["aml"],
+				"summary": "Create a new AML screening",
+				"description": "Perform AML screening for a customer",
+				"operationId": "createAmlScreening",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "AML screening object that needs to be created",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/AmlScreening"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/AmlScreening"
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:aml", "read:aml"]
+					}
+				]
+			}
+		},
+		"/Aml/{id}": {
+			"get": {
+				"tags": ["aml"],
+				"summary": "Find AML screening by ID",
+				"description": "Returns a single AML screening record",
+				"operationId": "getAmlScreeningById",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of AML screening to return",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/AmlScreening"
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "AML screening not found"
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			},
+			"put": {
+				"tags": ["aml"],
+				"summary": "Update an existing AML screening",
+				"description": "Update AML screening record",
+				"operationId": "updateAmlScreening",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of AML screening that needs to be updated",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Updated AML screening object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/AmlScreening"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "AML screening not found"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:aml", "read:aml"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["aml"],
+				"summary": "Delete AML screening",
+				"description": "Delete an AML screening record",
+				"operationId": "deleteAmlScreening",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "AML screening ID to delete",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "AML screening not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:aml"]
+					}
+				]
+			}
+		},
+		"/Aml/NationalId/{nationalId}": {
+			"get": {
+				"tags": ["aml"],
+				"summary": "Get AML screenings by National ID",
+				"description": "Retrieve AML screening records for a specific national ID",
+				"operationId": "getAmlScreeningByNationalId",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "nationalId",
+						"in": "path",
+						"description": "National ID to retrieve AML screenings for",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/AmlScreening"
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid National ID"
+					},
+					"404": {
+						"description": "AML screening not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:aml"]
+					}
+				]
+			}
+		},
+		"/CoreAccount": {
+			"get": {
+				"tags": ["account"],
+				"summary": "Get all accounts",
+				"description": "Retrieve a list of all bank accounts",
+				"operationId": "getAllAccounts",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/CoreAccountDTO"
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:accounts"]
+					}
+				]
+			},
+			"post": {
+				"tags": ["account"],
+				"summary": "Create a new account",
+				"description": "Create a new bank account",
+				"operationId": "createAccount",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Account object that needs to be created",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CoreAccount"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:accounts", "read:accounts"]
+					}
+				]
+			}
+		},
+		"/CoreAccount/{accountNumber}": {
+			"get": {
+				"tags": ["account"],
+				"summary": "Find account by account number",
+				"description": "Returns a single account",
+				"operationId": "getAccountByNumber",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "accountNumber",
+						"in": "path",
+						"description": "Account number of account to return",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/CoreAccountDTO"
+						}
+					},
+					"400": {
+						"description": "Invalid account number supplied"
+					},
+					"404": {
+						"description": "Account not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:accounts"]
+					}
+				]
+			},
+			"put": {
+				"tags": ["account"],
+				"summary": "Update an existing account",
+				"description": "Update account information",
+				"operationId": "updateAccount",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "accountNumber",
+						"in": "path",
+						"description": "Account number that needs to be updated",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Updated account object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CoreAccount"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid account number supplied"
+					},
+					"404": {
+						"description": "Account not found"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:accounts", "read:accounts"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["account"],
+				"summary": "Delete account",
+				"description": "Close a bank account",
+				"operationId": "deleteAccount",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "accountNumber",
+						"in": "path",
+						"description": "Account number to delete",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid account number supplied"
+					},
+					"404": {
+						"description": "Account not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:accounts"]
+					}
+				]
+			}
+		},
+		"/CoreAccount/{accountNumber}/RemoveDebitBlock": {
+			"patch": {
+				"tags": ["account"],
+				"summary": "Remove debit block from account",
+				"description": "Remove debit block restriction from an account",
+				"operationId": "removeDebitBlock",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "accountNumber",
+						"in": "path",
+						"description": "Account number to remove debit block from",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid account number supplied"
+					},
+					"404": {
+						"description": "Account not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:accounts"]
+					}
+				]
+			}
+		},
+		"/CoreCustomer": {
+			"get": {
+				"tags": ["customer"],
+				"summary": "Get all customers",
+				"description": "Retrieve a list of all customers",
+				"operationId": "getAllCustomers",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/CoreCustomerDTO"
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:customers"]
+					}
+				]
+			},
+			"post": {
+				"tags": ["customer"],
+				"summary": "Create customer",
+				"description": "Register a new customer",
+				"operationId": "createCustomer",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Created customer object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CoreCustomer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid input"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:customers"]
+					}
+				]
+			}
+		},
+		"/CoreCustomer/CIF/{cif}": {
+			"get": {
+				"tags": ["customer"],
+				"summary": "Get customer by CIF",
+				"description": "Retrieve customer information by Customer Information File number",
+				"operationId": "getCustomerByCif",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "cif",
+						"in": "path",
+						"description": "The CIF number that needs to be fetched",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/CoreCustomerDTO"
+						}
+					},
+					"400": {
+						"description": "Invalid CIF supplied"
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:customers"]
+					}
+				]
+			}
+		},
+		"/CoreCustomer/NationalId/{nationalId}": {
+			"get": {
+				"tags": ["customer"],
+				"summary": "Get customer by National ID",
+				"description": "Retrieve customer information by National ID",
+				"operationId": "getCustomerByNationalId",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "nationalId",
+						"in": "path",
+						"description": "National ID of customer to return",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/CoreCustomerDTO"
+						}
+					},
+					"400": {
+						"description": "Invalid National ID supplied"
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:customers"]
+					}
+				]
+			}
+		},
+		"/CoreCustomer/{cif}": {
+			"put": {
+				"tags": ["customer"],
+				"summary": "Update customer",
+				"description": "Update customer information",
+				"operationId": "updateCustomer",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "cif",
+						"in": "path",
+						"description": "CIF that needs to be updated",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Updated customer object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CoreCustomer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid customer supplied"
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:customers"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["customer"],
+				"summary": "Delete customer",
+				"description": "Remove customer from the system",
+				"operationId": "deleteCustomer",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "cif",
+						"in": "path",
+						"description": "The CIF that needs to be deleted",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid CIF supplied"
+					},
+					"404": {
+						"description": "Customer not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:customers"]
+					}
+				]
+			}
+		},
+		"/Ecm/Folders": {
+			"get": {
+				"tags": ["document"],
+				"summary": "Get all folders",
+				"description": "Retrieve all document folders",
+				"operationId": "getAllFolders",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/EcmFolderDTO"
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			},
+			"post": {
+				"tags": ["document"],
+				"summary": "Create a new folder",
+				"description": "Create a document folder",
+				"operationId": "createFolder",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Folder object that needs to be created",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/EcmFolder"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/EcmFolder"
+						}
+					},
+					"405": {
+						"description": "Invalid input"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents", "read:documents"]
+					}
+				]
+			}
+		},
+		"/Ecm/Folders/{cif}": {
+  "get": {
+    "tags": ["document"],
+    "summary": "Get folders by CIF",
+    "description": "Retrieve document folders for a specific customer CIF. This endpoint retrieves folders associated with a customer identified by their CIF number.",
+    "operationId": "getFoldersByCif",
+    "produces": ["application/json"],
+    "parameters": [
+      {
+        "name": "cif",
+        "in": "path",
+        "description": "CIF of customer to retrieve folders for (integer or string representation of the customer ID)",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "successful operation",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EcmFolderDTO"
           }
         }
       },
-      "post": {
-        "summary": "Create AML screening (screen customer)",
-        "operationId": "Aml_ScreenCustomer",
-        "parameters": [
-          { "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/AmlScreening" } }
-        ],
-        "responses": {
-          "201": { "description": "Created", "schema": { "$ref": "#/definitions/AmlScreening" } },
-          "400": { "description": "Bad Request" }
-        }
-      }
-    },
-    "/api/Aml/{id}": {
-      "get": {
-        "summary": "Get AML screening by ID",
-        "operationId": "Aml_GetScreeningById",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "200": { "description": "Screening found", "schema": { "$ref": "#/definitions/AmlScreening" } },
-          "404": { "description": "Not Found" }
-        }
+      "400": {
+        "description": "Invalid CIF supplied"
       },
-      "put": {
-        "summary": "Update AML screening",
-        "operationId": "Aml_UpdateScreening",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/AmlScreening" } }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request" },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "delete": {
-        "summary": "Delete AML screening",
-        "operationId": "Aml_DeleteScreening",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
+      "404": {
+        "description": "Folders not found for the specified CIF"
       }
     },
-    "/api/Aml/NationalId/{nationalId}": {
-      "get": {
-        "summary": "Get AML screenings by National ID",
-        "operationId": "Aml_GetScreeningsByNationalId",
-        "parameters": [
-          { "name": "nationalId", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": { "description": "List of screenings", "schema": { "type": "array", "items": { "$ref": "#/definitions/AmlScreening" } } },
-          "404": { "description": "Not Found" }
-        }
+    "security": [
+      {
+        "banking_auth": ["read:documents"]
       }
-    },
-
-    "/api/CoreAccount": {
-      "get": {
-        "summary": "Get all accounts (with optional embedded customer)",
-        "operationId": "CoreAccount_GetAll",
-        "responses": {
-          "200": { "description": "List of accounts (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreAccountDTO" } } }
-        }
-      },
-      "post": {
-        "summary": "Create account",
-        "operationId": "CoreAccount_Create",
-        "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreAccount" } }
-        ],
-        "responses": {
-          "201": { "description": "Created", "schema": { "$ref": "#/definitions/CreateAccountResponse" } },
-          "400": { "description": "Bad Request" }
-        }
-      }
-    },
-    "/api/CoreAccount/{accountNumber}": {
-      "get": {
-        "summary": "Get account by AccountNumber",
-        "operationId": "CoreAccount_GetByAccountNumber",
-        "parameters": [
-          { "name": "accountNumber", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": { "description": "Account (DTO)", "schema": { "$ref": "#/definitions/CoreAccountDTO" } },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "put": {
-        "summary": "Modify account (full update)",
-        "operationId": "CoreAccount_Modify",
-        "parameters": [
-          { "name": "accountNumber", "in": "path", "required": true, "type": "string" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreAccount" } }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request" },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "delete": {
-        "summary": "Delete account",
-        "operationId": "CoreAccount_Delete",
-        "parameters": [
-          { "name": "accountNumber", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/CoreAccount/{accountNumber}/RemoveDebitBlock": {
-      "patch": {
-        "summary": "Remove debit block by account number",
-        "operationId": "CoreAccount_RemoveDebitBlock",
-        "parameters": [
-          { "name": "accountNumber", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-
-    "/api/CoreCustomer": {
-      "get": {
-        "summary": "Get all customers (with accounts)",
-        "operationId": "CoreCustomer_GetAll",
-        "responses": {
-          "200": { "description": "List of customers (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/CoreCustomerDTO" } } }
-        }
-      },
-      "post": {
-        "summary": "Create customer",
-        "operationId": "CoreCustomer_Create",
-        "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreCustomer" } }
-        ],
-        "responses": {
-          "201": { "description": "Created", "schema": { "$ref": "#/definitions/CreateCustomerResponse" } },
-          "400": { "description": "Bad Request" }
-        }
-      }
-    },
-    "/api/CoreCustomer/CIF/{cif}": {
-      "get": {
-        "summary": "Get customer by CIF",
-        "operationId": "CoreCustomer_GetByCif",
-        "parameters": [
-          { "name": "cif", "in": "path", "required": true, "type": "integer", "format": "int64" }
-        ],
-        "responses": {
-          "200": { "description": "Customer (DTO)", "schema": { "$ref": "#/definitions/CoreCustomerDTO" } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/CoreCustomer/{cif}": {
-      "put": {
-        "summary": "Update customer",
-        "operationId": "CoreCustomer_Update",
-        "parameters": [
-          { "name": "cif", "in": "path", "required": true, "type": "integer", "format": "int64" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CoreCustomer" } }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request" },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "delete": {
-        "summary": "Delete customer",
-        "operationId": "CoreCustomer_Delete",
-        "parameters": [
-          { "name": "cif", "in": "path", "required": true, "type": "integer", "format": "int64" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/CoreCustomer/NationalId/{nationalId}": {
-      "get": {
-        "summary": "Get customer by National ID",
-        "operationId": "CoreCustomer_GetByNationalId",
-        "parameters": [
-          { "name": "nationalId", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": { "description": "Customer (DTO)", "schema": { "$ref": "#/definitions/CoreCustomerDTO" } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-
-    "/api/Ecm/Folders": {
-      "get": {
-        "summary": "Get all ECM folders (with documents)",
-        "operationId": "Ecm_GetAllFolders",
-        "responses": {
-          "200": { "description": "List of folders (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } } }
-        }
-      },
-      "post": {
-        "summary": "Create ECM folder",
-        "operationId": "Ecm_CreateFolder",
-        "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmFolder" } }
-        ],
-        "responses": {
-          "201": { "description": "Created", "schema": { "$ref": "#/definitions/EcmFolder" } },
-          "400": { "description": "Bad Request" }
-        }
-      }
-    },
-    "/api/Ecm/Folders/cif/{cif}": {
-      "get": {
-        "summary": "Get ECM folders by CIF",
-        "operationId": "Ecm_GetFoldersByCif",
-        "parameters": [
-          { "name": "cif", "in": "path", "required": true, "type": "integer", "format": "int64" }
-        ],
-        "responses": {
-          "200": { "description": "List of folders (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmFolderDTO" } } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/Ecm/Folders/{id}": {
-      "put": {
-        "summary": "Update ECM folder",
-        "operationId": "Ecm_UpdateFolder",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmFolder" } }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request" },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "delete": {
-        "summary": "Delete ECM folder",
-        "operationId": "Ecm_DeleteFolder",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-
-    "/api/Ecm/Folders/{folderId}/{requestId}/Documents": {
-      "get": {
-        "summary": "Get documents by FolderId and RequestId",
-        "operationId": "Ecm_GetDocumentsByFolderAndRequest",
-        "parameters": [
-          { "name": "folderId", "in": "path", "required": true, "type": "string", "format": "uuid" },
-          { "name": "requestId", "in": "path", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": { "description": "List of documents", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocument" } } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-
-    "/api/Ecm/Documents": {
-      "get": {
-        "summary": "Get all ECM documents (with optional folder)",
-        "operationId": "Ecm_GetAllDocuments",
-        "responses": {
-          "200": { "description": "List of documents (DTO)", "schema": { "type": "array", "items": { "$ref": "#/definitions/EcmDocumentDTO" } } }
-        }
-      },
-      "post": {
-        "summary": "Upload ECM document",
-        "operationId": "Ecm_UploadDocument",
-        "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmDocument" } }
-        ],
-        "responses": {
-          "201": { "description": "Created", "schema": { "$ref": "#/definitions/EcmDocument" } },
-          "400": { "description": "Bad Request" }
-        }
-      }
-    },
-    "/api/Ecm/Documents/{id}": {
-      "get": {
-        "summary": "Get ECM document by ID",
-        "operationId": "Ecm_GetDocumentById",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "200": { "description": "Document (DTO)", "schema": { "$ref": "#/definitions/EcmDocumentDTO" } },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "put": {
-        "summary": "Update ECM document",
-        "operationId": "Ecm_UpdateDocument",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/EcmDocument" } }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "400": { "description": "Bad Request" },
-          "404": { "description": "Not Found" }
-        }
-      },
-      "delete": {
-        "summary": "Delete ECM document",
-        "operationId": "Ecm_DeleteDocument",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "204": { "description": "No Content" },
-          "404": { "description": "Not Found" }
-        }
-      }
-    },
-    "/api/Ecm/Documents/{id}/Status": {
-      "get": {
-        "summary": "Get status of ECM document",
-        "operationId": "Ecm_FetchDocStatus",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string", "format": "uuid" }
-        ],
-        "responses": {
-          "200": { "description": "Status string", "schema": { "type": "string" } },
-          "404": { "description": "Not Found" }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "AmlScreening": {
-      "type": "object",
-      "required": ["RiskScore", "RiskLevel"],
-      "properties": {
-        "ScreeningId": { "type": "string", "format": "uuid" },
-        "NationalID": { "type": "string", "maxLength": 14 },
-        "PassportNo": { "type": "string", "maxLength": 30 },
-        "NameAr": { "type": "string", "maxLength": 200 },
-        "NameEn": { "type": "string", "maxLength": 200 },
-        "RiskScore": { "type": "integer", "format": "int32" },
-        "RiskLevel": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"], "maxLength": 10 },
-        "HitsCount": { "type": "integer", "format": "int32" },
-        "PerformedAt": { "type": "string", "format": "date-time" }
-      }
-    },
-    "CoreAccount": {
-      "type": "object",
-      "required": ["AccountNumber", "CIF", "AccountType", "Currency"],
-      "properties": {
-        "AccountNumber": { "type": "string", "maxLength": 20 },
-        "CIF": { "type": "integer", "format": "int64" },
-        "AccountType": { "type": "string", "maxLength": 30 },
-        "Currency": { "type": "string", "maxLength": 3 },
-        "DebitBlocked": { "type": "boolean" },
-        "ProductCode": { "type": "string", "maxLength": 30 },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Customer": { "$ref": "#/definitions/CoreCustomer" }
-      }
-    },
-    "CoreCustomer": {
-      "type": "object",
-      "required": ["NameAr", "DOB", "Gender", "Mobile", "BranchCode"],
-      "properties": {
-        "CIF": { "type": "integer", "format": "int64" },
-        "NationalID": { "type": "string", "maxLength": 14 },
-        "PassportNo": { "type": "string", "maxLength": 30 },
-        "NameAr": { "type": "string", "maxLength": 200 },
-        "NameEn": { "type": "string", "maxLength": 200 },
-        "DOB": { "type": "string", "format": "date" },
-        "Gender": { "type": "string", "enum": ["M", "F"], "maxLength": 1 },
-        "Address": { "type": "string", "maxLength": 400 },
-        "Mobile": { "type": "string", "maxLength": 20 },
-        "Email": { "type": "string" },
-        "BranchCode": { "type": "string", "maxLength": 10 },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Accounts": { "type": "array", "items": { "$ref": "#/definitions/CoreAccount" } }
-      }
-    },
-    "EcmFolder": {
-      "type": "object",
-      "required": ["FolderId", "CIF", "RequestId"],
-      "properties": {
-        "FolderId": { "type": "string", "format": "uuid" },
-        "CIF": { "type": "integer", "format": "int64" },
-        "RequestId": { "type": "string", "maxLength": 50 },
-        "PathHint": { "type": "string", "maxLength": 500 },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Documents": { "type": "array", "items": { "$ref": "#/definitions/EcmDocument" } }
-      }
-    },
-    "EcmDocument": {
-      "type": "object",
-      "required": ["DocumentId", "FolderId", "RequestId", "DocType", "FileName"],
-      "properties": {
-        "DocumentId": { "type": "string", "format": "uuid" },
-        "FolderId": { "type": "string", "format": "uuid" },
-        "RequestId": { "type": "string", "maxLength": 50 },
-        "DocType": { "type": "string", "maxLength": 50 },
-        "FileName": { "type": "string", "maxLength": 255 },
-        "UploadedAt": { "type": "string", "format": "date-time" },
-        "Folder": { "$ref": "#/definitions/EcmFolder" }
-      }
-    },
-
-    "CoreAccountDTO": {
-      "type": "object",
-      "properties": {
-        "AccountNumber": { "type": "string" },
-        "CIF": { "type": "integer", "format": "int64" },
-        "AccountType": { "type": "string" },
-        "Currency": { "type": "string" },
-        "DebitBlocked": { "type": "boolean" },
-        "ProductCode": { "type": "string" },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Customer": { "$ref": "#/definitions/CoreCustomerDTO" }
-      }
-    },
-    "CoreCustomerDTO": {
-      "type": "object",
-      "properties": {
-        "CIF": { "type": "integer", "format": "int64" },
-        "NationalID": { "type": "string" },
-        "PassportNo": { "type": "string" },
-        "NameAr": { "type": "string" },
-        "NameEn": { "type": "string" },
-        "DOB": { "type": "string", "format": "date" },
-        "Gender": { "type": "string", "enum": ["M", "F"] },
-        "Address": { "type": "string" },
-        "Mobile": { "type": "string" },
-        "Email": { "type": "string" },
-        "BranchCode": { "type": "string" },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Accounts": { "type": "array", "items": { "$ref": "#/definitions/CoreAccountDTO" } }
-      }
-    },
-    "EcmFolderDTO": {
-      "type": "object",
-      "properties": {
-        "FolderId": { "type": "string", "format": "uuid" },
-        "CIF": { "type": "integer", "format": "int64" },
-        "RequestId": { "type": "string" },
-        "PathHint": { "type": "string" },
-        "CreatedAt": { "type": "string", "format": "date-time" },
-        "Documents": { "type": "array", "items": { "$ref": "#/definitions/EcmDocumentDTO" } }
-      }
-    },
-    "EcmDocumentDTO": {
-      "type": "object",
-      "properties": {
-        "DocumentId": { "type": "string", "format": "uuid" },
-        "FolderId": { "type": "string", "format": "uuid" },
-        "RequestId": { "type": "string" },
-        "DocType": { "type": "string" },
-        "FileName": { "type": "string" },
-        "UploadedAt": { "type": "string", "format": "date-time" },
-        "Folder": { "$ref": "#/definitions/EcmFolderDTO" }
-      }
-    },
-
-    "CreateAccountResponse": {
-      "type": "object",
-      "properties": {
-        "accountNumber": { "type": "string" },
-        "debitBlocked": { "type": "boolean" }
-      }
-    },
-    "CreateCustomerResponse": {
-      "type": "object",
-      "properties": {
-        "cif": { "type": "integer", "format": "int64" }
-      }
-    }
+    ]
   }
+},
+		"/Ecm/Folders/{id}": {
+			"put": {
+				"tags": ["document"],
+				"summary": "Update an existing folder",
+				"description": "Update document folder information by folder ID (UUID)",
+				"operationId": "updateFolderById",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "UUID of folder that needs to be updated",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Updated folder object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/EcmFolder"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Folder not found"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents", "read:documents"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["document"],
+				"summary": "Delete folder",
+				"description": "Delete a document folder by folder ID (UUID)",
+				"operationId": "deleteFolderById",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "UUID of folder to delete",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Folder not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents"]
+					}
+				]
+			}
+		},
+		"/Ecm/Folders/{folderId}/{requestId}/Documents": {
+  "get": {
+    "tags": ["document"],
+    "summary": "Get documents in a folder",
+    "description": "Retrieve documents in a specific folder and request ID",
+    "operationId": "getDocumentsByFolderAndRequestId",
+    "produces": ["application/json"],
+    "parameters": [
+      {
+        "name": "folderId",
+        "in": "path",
+        "description": "ID of folder to retrieve documents from",
+        "required": true,
+        "type": "string",
+        "format": "uuid"
+      },
+      {
+        "name": "requestId",
+        "in": "path",
+        "description": "Request ID associated with documents",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "successful operation",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EcmDocumentDTO"
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid folder ID or request ID supplied"
+      },
+      "404": {
+        "description": "Documents not found"
+      }
+    },
+    "security": [
+      {
+        "banking_auth": ["read:documents"]
+      }
+    ]
+  }
+},
+		"/Ecm/Documents": {
+			"get": {
+				"tags": ["document"],
+				"summary": "Get all documents",
+				"description": "Retrieve all documents",
+				"operationId": "getAllDocuments",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/EcmDocumentDTO"
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			},
+			"post": {
+				"tags": ["document"],
+				"summary": "Upload a document",
+				"description": "Upload a new document to the system",
+				"operationId": "uploadDocument",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Document object to upload",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/EcmDocument"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/EcmDocument"
+						}
+					},
+					"405": {
+						"description": "Invalid input"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents", "read:documents"]
+					}
+				]
+			}
+		},
+		"/Ecm/Documents/{id}": {
+			"get": {
+				"tags": ["document"],
+				"summary": "Get document by ID",
+				"description": "Retrieve a specific document by ID",
+				"operationId": "getDocumentById",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of document to return",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"$ref": "#/definitions/EcmDocumentDTO"
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Document not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:documents"]
+					}
+				]
+			},
+			"put": {
+				"tags": ["document"],
+				"summary": "Update an existing document",
+				"description": "Update document information",
+				"operationId": "updateDocument",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of document that needs to be updated",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"description": "Updated document object",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/EcmDocument"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Document not found"
+					},
+					"405": {
+						"description": "Validation exception"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents", "read:documents"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["document"],
+				"summary": "Delete document",
+				"description": "Delete a document",
+				"operationId": "deleteDocument",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Document ID to delete",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Document not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["write:documents"]
+					}
+				]
+			}
+		},
+		"/Ecm/Documents/{id}/Status": {
+			"get": {
+				"tags": ["document"],
+				"summary": "Get document status",
+				"description": "Retrieve the status of a specific document",
+				"operationId": "getDocumentStatus",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of document to check status for",
+						"required": true,
+						"type": "string",
+						"format": "uuid"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"schema": {
+							"type": "string"
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Document not found"
+					}
+				},
+				"security": [
+					{
+						"banking_auth": ["read:documents"]
+					}
+				]
+			}
+		}
+	},
+	"securityDefinitions": {
+		"banking_auth": {
+			"type": "oauth2",
+			"authorizationUrl": "http://el-barka.runasp.net/oauth/dialog",
+			"flow": "implicit",
+			"scopes": {
+				"write:aml": "modify AML screening records",
+				"read:aml": "read AML screening records",
+				"write:accounts": "modify accounts in your system",
+				"read:accounts": "read your accounts",
+				"write:customers": "modify customer records",
+				"read:customers": "read customer records",
+				"write:documents": "modify documents",
+				"read:documents": "read documents"
+			}
+		},
+		"api_key": {
+			"type": "apiKey",
+			"name": "api_key",
+			"in": "header"
+		}
+	},
+	"definitions": {
+		"AmlScreening": {
+			"type": "object",
+			"required": ["riskLevel", "riskScore"],
+			"properties": {
+				"screeningId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"nationalID": {
+					"type": "string",
+					"maxLength": 14,
+					"minLength": 0
+				},
+				"passportNo": {
+					"type": "string",
+					"maxLength": 30,
+					"minLength": 0
+				},
+				"nameAr": {
+					"type": "string",
+					"maxLength": 200,
+					"minLength": 0
+				},
+				"nameEn": {
+					"type": "string",
+					"maxLength": 200,
+					"minLength": 0
+				},
+				"riskScore": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"riskLevel": {
+					"type": "string",
+					"maxLength": 10,
+					"minLength": 0,
+					"enum": ["low", "medium", "high"]
+				},
+				"hitsCount": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"performedAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"xml": {
+				"name": "AmlScreening"
+			}
+		},
+		"CoreAccount": {
+			"type": "object",
+			"required": ["accountType", "cif", "currency"],
+			"properties": {
+				"accountNumber": {
+					"type": "string",
+					"maxLength": 20,
+					"minLength": 0,
+					"example": "1234567890"
+				},
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"customer": {
+					"$ref": "#/definitions/CoreCustomer"
+				},
+				"accountType": {
+					"type": "string",
+					"maxLength": 30,
+					"minLength": 0,
+					"enum": ["savings", "current", "fixed_deposit", "loan"]
+				},
+				"currency": {
+					"type": "string",
+					"maxLength": 3,
+					"minLength": 3,
+					"example": "USD"
+				},
+				"debitBlocked": {
+					"type": "boolean",
+					"default": false
+				},
+				"productCode": {
+					"type": "string",
+					"maxLength": 30,
+					"minLength": 0
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"xml": {
+				"name": "CoreAccount"
+			}
+		},
+		"CoreAccountDTO": {
+			"type": "object",
+			"properties": {
+				"accountNumber": {
+					"type": "string"
+				},
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"accountType": {
+					"type": "string"
+				},
+				"currency": {
+					"type": "string"
+				},
+				"debitBlocked": {
+					"type": "boolean"
+				},
+				"productCode": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"customer": {
+					"$ref": "#/definitions/CoreCustomerDTO"
+				}
+			},
+			"xml": {
+				"name": "CoreAccountDTO"
+			}
+		},
+		"CoreCustomer": {
+			"type": "object",
+			"required": ["branchCode", "dob", "gender", "mobile", "nameAr"],
+			"properties": {
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"nationalID": {
+					"type": "string",
+					"maxLength": 14,
+					"minLength": 0,
+					"example": "12345678901234"
+				},
+				"passportNo": {
+					"type": "string",
+					"maxLength": 30,
+					"minLength": 0
+				},
+				"nameAr": {
+					"type": "string",
+					"maxLength": 200,
+					"minLength": 0,
+					"example": "محمد أحمد"
+				},
+				"nameEn": {
+					"type": "string",
+					"maxLength": 200,
+					"minLength": 0,
+					"example": "Mohamed Ahmed"
+				},
+				"dob": {
+					"type": "string",
+					"format": "date"
+				},
+				"gender": {
+					"type": "string",
+					"enum": ["male", "female"]
+				},
+				"address": {
+					"type": "string",
+					"maxLength": 400,
+					"minLength": 0
+				},
+				"mobile": {
+					"type": "string",
+					"maxLength": 20,
+					"minLength": 0,
+					"example": "+201234567890"
+				},
+				"email": {
+					"type": "string",
+					"maxLength": 200,
+					"minLength": 0,
+					"format": "email"
+				},
+				"branchCode": {
+					"type": "string",
+					"maxLength": 10,
+					"minLength": 0,
+					"example": "BR001"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"accounts": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CoreAccount"
+					}
+				}
+			},
+			"xml": {
+				"name": "CoreCustomer"
+			}
+		},
+		"CoreCustomerDTO": {
+			"type": "object",
+			"properties": {
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"nationalID": {
+					"type": "string"
+				},
+				"passportNo": {
+					"type": "string"
+				},
+				"nameAr": {
+					"type": "string"
+				},
+				"nameEn": {
+					"type": "string"
+				},
+				"dob": {
+					"type": "string",
+					"format": "date"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"address": {
+					"type": "string"
+				},
+				"mobile": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"branchCode": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"accounts": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CoreAccountDTO"
+					}
+				}
+			},
+			"xml": {
+				"name": "CoreCustomerDTO"
+			}
+		},
+		"EcmDocument": {
+			"type": "object",
+			"required": ["docType", "fileName", "folderId", "requestId"],
+			"properties": {
+				"documentId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"folderId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"folder": {
+					"$ref": "#/definitions/EcmFolder"
+				},
+				"requestId": {
+					"type": "string",
+					"maxLength": 50,
+					"minLength": 0,
+					"example": "REQ001"
+				},
+				"docType": {
+					"type": "string",
+					"maxLength": 50,
+					"minLength": 0,
+					"enum": ["identity", "proof_of_income", "bank_statement", "contract", "other"]
+				},
+				"fileName": {
+					"type": "string",
+					"maxLength": 255,
+					"minLength": 0,
+					"example": "document.pdf"
+				},
+				"uploadedAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"xml": {
+				"name": "EcmDocument"
+			}
+		},
+		"EcmDocumentDTO": {
+			"type": "object",
+			"properties": {
+				"documentId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"folderId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"requestId": {
+					"type": "string"
+				},
+				"docType": {
+					"type": "string"
+				},
+				"fileName": {
+					"type": "string"
+				},
+				"uploadedAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"folder": {
+					"$ref": "#/definitions/EcmFolderDTO"
+				}
+			},
+			"xml": {
+				"name": "EcmDocumentDTO"
+			}
+		},
+		"EcmFolder": {
+			"type": "object",
+			"required": ["cif", "requestId"],
+			"properties": {
+				"folderId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"requestId": {
+					"type": "string",
+					"maxLength": 50,
+					"minLength": 0,
+					"example": "REQ001"
+				},
+				"pathHint": {
+					"type": "string",
+					"maxLength": 500,
+					"minLength": 0
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"documents": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/EcmDocument"
+					}
+				}
+			},
+			"xml": {
+				"name": "EcmFolder"
+			}
+		},
+		"EcmFolderDTO": {
+			"type": "object",
+			"properties": {
+				"folderId": {
+					"type": "string",
+					"format": "uuid"
+				},
+				"cif": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"requestId": {
+					"type": "string"
+				},
+				"pathHint": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"documents": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/EcmDocumentDTO"
+					}
+				}
+			},
+			"xml": {
+				"name": "EcmFolderDTO"
+			}
+		}
+	},
+	"externalDocs": {
+		"description": "Find out more about Banking API",
+		"url": "http://el-barka.runasp.net"
+	}
 }
-
