@@ -634,9 +634,18 @@
             "type": "string"
           }
         ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EcmDocumentDTO"
+              }
+            }
           }
         }
       }
@@ -670,6 +679,9 @@
         "consumes": [
           "application/json"
         ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "body",
@@ -679,9 +691,6 @@
               "$ref": "#/definitions/EcmDocument"
             }
           }
-        ],
-        "produces": [
-          "application/json"
         ],
         "responses": {
           "200": {
